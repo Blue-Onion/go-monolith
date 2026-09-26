@@ -6,10 +6,15 @@ import (
 	"time"
 
 	"github.com/Blue-Onion/go-monolith/internal/config"
+	"github.com/Blue-Onion/go-monolith/internal/db"
 )
 
 func main() {
 	cfg := config.MustLoad()
+	_, err := db.Connect(cfg.Db_URl)
+	if err != nil {
+		log.Fatalf("db.Connect:%s", err.Error())
+	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
